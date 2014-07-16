@@ -37,7 +37,7 @@ public class LocalConfig implements IDynamicConfig{
         this.configFile = configFile;
         try {
             loadConfig(configFile);
-            //registerWatcher();
+            registerWatcher();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -79,8 +79,13 @@ public class LocalConfig implements IDynamicConfig{
                                 logger.error("checkConfigLoop loadConfig error:{}",e);
                             }
                         }else{
-                            logger.debug("ignore event:it was not a config file changing");
+                            logger.debug("ignore event:it was not a config file changing as name:{}",name);
                         }
+                    }
+                    boolean valid = key.reset();
+                    if (!valid)
+                    {
+                        break;	// Exit if directory is deleted
                     }
                 }
             }
@@ -103,7 +108,7 @@ public class LocalConfig implements IDynamicConfig{
                     newConfigMap.put(propertyName, properties.getProperty(propertyName));
                 }
                 if(newConfigMap.size()>0)
-                localConfigMap = newConfigMap;
+                    localConfigMap = newConfigMap;
             }
         } catch (URISyntaxException|IOException e) {
             logger.error("loadLocalConfig error:{}",e);
