@@ -31,13 +31,13 @@ public class ConfigBundle implements IConfigProxy {
             String localVal = localConfig.get(key);
             if(StringUtils.isNotBlank(localVal)){
                 if(logger.isDebugEnabled()){
-                    logger.debug("ConfigBundle get config from local key:{} value:{}",key,localVal);
+                    //logger.debug("ConfigBundle get config from local key:{} value:{}",key,localVal);
                 }
                 return localVal;
             }else{
                 String remoteVal = remoteConfig.get(key);
                 if(logger.isDebugEnabled()){
-                    logger.debug("ConfigBundle get config from remote key:{} value:{}",key,remoteVal);
+                    //logger.debug("ConfigBundle get config from remote key:{} value:{}",key,remoteVal);
                 }
                 return remoteVal;
             }

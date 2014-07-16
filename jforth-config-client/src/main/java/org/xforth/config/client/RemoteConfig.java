@@ -34,7 +34,7 @@ public class RemoteConfig implements IDynamicConfig {
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
         zkClient = CuratorFrameworkFactory.newClient(zkConnectString, retryPolicy);
         zkClient.start();
-        //registerWatcher();
+        registerWatcher();
         loadConfig(null);
     }
     @Override
@@ -93,16 +93,16 @@ public class RemoteConfig implements IDynamicConfig {
             public void childEvent(CuratorFramework client, PathChildrenCacheEvent event) throws Exception {
                 String path = event.getData().getPath();
                 String key = path.replaceAll(servicePath + "/", "").trim();
-                String val = event.getData().toString().trim();
+                byte[] dataBytes = event.getData().getData();
                 switch (event.getType()) {
                     case CHILD_ADDED:
-                        remoteConfigMap.put(key,val);
+                        remoteConfigMap.put(key,new String(dataBytes,DEFAULT_ENCODE));
                         break;
                     case CHILD_REMOVED:
                         remoteConfigMap.remove(key);
                         break;
                     case CHILD_UPDATED:
-                        remoteConfigMap.put(key,val);
+                        remoteConfigMap.put(key,new String(dataBytes,DEFAULT_ENCODE));
                         break;
                 }
             }
