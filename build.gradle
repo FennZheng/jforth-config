@@ -1,0 +1,148 @@
+apply plugin: 'maven'
+
+buildDir = "../public/${moduleName}"
+
+ext {
+    distRevision = System.env.SVN_REVISION ? "${System.env.SVN_REVISION}" : "unformal"
+    distBuildNumber = System.env.BUILD_NUMBER ? "${System.env.BUILD_NUMBER}" : "unknown"
+    distBuildId = System.env.BUILD_ID ? "${System.env.BUILD_ID}" : System.currentTimeMillis()
+    distPureFileName = "$moduleName-$version-$distBuildNumber-$distBuildId-scm-$distRevision"
+}
+
+configurations {
+    all*.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    all*.exclude group: 'log4j', module: 'log4j'
+    all*.exclude group: 'commons-logging', module: 'commons-logging'
+    all {resolutionStrategy.cacheChangingModulesFor 30, 'minutes'}
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    configurations {
+        optional
+        compile.extendsFrom optional
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        components {
+            eachComponent { details ->
+                details.statusScheme = ["snapshot", "integration", "milestone", "release"]
+            }
+        }
+
+        /* spring */
+        compile "org.springframework:spring-context-support:3.2.9.RELEASE"
+
+        /* apache commons ,google commons*/
+        compile 'org.apache.commons:commons-lang3:3.3.2'
+
+        /* log */
+        compile "org.slf4j:jcl-over-slf4j:1.7.7"
+        compile "ch.qos.logback:logback-classic:1.1.2"
+        compile("org.logback-extensions:logback-ext-spring:0.1.2") { transitive = false }
+
+        /* others */
+        compile 'com.alibaba:fastjson:1.1.41'
+        compile "org.apache.curator:curator-recipes:2.4.2"
+        compile 'javax.transaction:jta:1.1'
+
+        /* test */
+        testCompile 'junit:junit:4.11'
+        testCompile "org.springframework:spring-test:3.2.9.RELEASE"
+    }
+    sourceSets {
+        main {
+            resources {
+                srcDirs 'src/main/resources', 'src/main/resource', 'scripts/logback'
+            }
+        }
+    }
+    idea {
+        module {
+            excludeDirs = []
+            [".idea", ".gradle", '.settings'].each {
+                excludeDirs << file("$it")
+            }
+        }
+    }
+}
+
+
+
+
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+    options.debug = "on"
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+}
+
+tasks.withType(Javadoc) {
+    options.encoding = "UTF-8"
+    options.charSet = "UTF-8"
+}
+
+task cleanAll << {
+    println "Clean project.."
+    delete buildDir
+}
+
+task init << {
+    println '+---------------------------------------------------+'
+    println '|                                                   |'
+    println "| B U I L D I N G $moduleName $version"
+    println '|                                                   |'
+    println '+---------------------------------------------------+'
+}
+
+compileJava.dependsOn([init, cleanAll])
+
+jar {
+    manifest {
+        //from 'scripts/manifest/MANIFEST.MF'
+        attributes("Specification-Title": moduleName, "Specification-Version": version)
+        attributes("Implementation-Title": moduleName, "Implementation-Version": "$version-$distBuildNumber-$distBuildId-$distRevision")
+        attributes("Specification-Vendor": "vernon.zheng", "Implementation-Vendor": "vernon.zheng")
+    }
+    exclude '*.properties'
+    exclude 'logback*.xml'
+
+    includeEmptyDirs = false
+    archiveName = "${moduleName}.jar"
+}
+
+task makeDist(dependsOn: [jar], type: Zip) {
+    into('bin') {
+        from jar
+        from(sourceSets.main.resources) {
+            include '*.properties'
+            include 'logback.xml'
+        }
+    }
+    into('bin') {
+        from "scripts/sh"
+        fileMode 0755
+    }
+    into('bin/bsh') {
+        from "scripts/bsh"
+    }
+    into('units') {
+        from "units"
+    }
+    into('lib') {
+        from configurations.runtime
+    }
+    from "$buildDir/${distPureFileName}.txt"
+    archiveName = "${distPureFileName}.zip"
+    destinationDir = rootDir
+}
+
+makeDist.doFirst {
+    new File("$buildDir/${distPureFileName}.txt").text = 'distribution version'
+    new File('.').eachFileMatch(~"$moduleName-.*\\.zip") { it.delete() }
+}
