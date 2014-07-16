@@ -15,7 +15,7 @@ public class DistributedPropertyPlaceholderConfigurer extends PropertyPlaceholde
     private static volatile AtomicBoolean inited = new AtomicBoolean(false);
     private ConfigBundle configBundle;
     /**
-     * 重写父类方法，增加远程config
+     * 重写父类方法，代理加载jforth-config
      */
     @Override
     protected void convertProperties(Properties props) {
