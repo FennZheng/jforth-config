@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-    <bean id="configBundle" class="org.jforth.config.ConfigBundle">
+    <bean id="configBundle" class="org.xforth.config.client.ConfigBundle">
         <constructor-arg index="0" value="config.properties"/>
         <constructor-arg index="1" value="app1"/>
         <constructor-arg index="2" value="172.16.3.27:2181"/>

@@ -1,21 +1,16 @@
-import com.alibaba.fastjson.JSON;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
-import org.apache.curator.framework.recipes.nodes.PersistentEphemeralNode;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
-import org.jforth.config.ConfigBundle;
 import org.junit.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.xforth.config.client.ConfigBundle;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-import static org.junit.Assert.assertEquals;
 
 @ContextConfiguration(locations = { "classpath*:configBundle.xml" })
 public class TestClient extends AbstractJUnit4SpringContextTests {
@@ -25,19 +20,19 @@ public class TestClient extends AbstractJUnit4SpringContextTests {
     @Test
     public void testLocalConfigRead() throws Exception {
         //local config
-        assertEquals("local.config.local.value1",configBundle.get("local.config.local.key1"));
-        assertEquals("local.config.local.value2",configBundle.get("local.config.local.key2"));
+        Assert.assertEquals("local.config.local.value1",configBundle.get("local.config.local.key1"));
+        Assert.assertEquals("local.config.local.value2",configBundle.get("local.config.local.key2"));
     }
     @Test
     public void testRemoteConfigRead() throws Exception {
         //remote config
-        assertEquals("local.config.remote.value3",configBundle.get("local.config.remote.key3"));
-        assertEquals("local.config.remote.value4",configBundle.get("local.config.remote.key4"));
+        Assert.assertEquals("local.config.remote.value3",configBundle.get("local.config.remote.key3"));
+        Assert.assertEquals("local.config.remote.value4",configBundle.get("local.config.remote.key4"));
     }
     @Test
     public void testLocalOverrideRemoteConfig() throws Exception {
         //override config
-        assertEquals("local.config.override.local.value1",configBundle.get("local.config.override.key1"));
+        Assert.assertEquals("local.config.override.local.value1",configBundle.get("local.config.override.key1"));
     }
     @Test
     public void testDyanmicLocalConfig() throws Exception {
@@ -69,7 +64,7 @@ public class TestClient extends AbstractJUnit4SpringContextTests {
     @Test
     public void testDynamicRemoteConfig() throws Exception {
         //dynamic remote config change
-        assertEquals("local.config.remote.value3",configBundle.get("local.config.remote.key3"));
+        Assert.assertEquals("local.config.remote.value3",configBundle.get("local.config.remote.key3"));
         final CountDownLatch countDownLatch = new CountDownLatch(2);
         new Thread(new Runnable() {
             @Override
