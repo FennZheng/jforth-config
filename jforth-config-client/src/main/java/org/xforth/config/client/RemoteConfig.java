@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -38,6 +40,15 @@ public class RemoteConfig implements IDynamicConfig {
     @Override
     public String get(String key) {
         return remoteConfigMap.get(key);
+    }
+
+    @Override
+    public Properties loadAll() {
+        Properties prop = new Properties();
+        for (Map.Entry<String, String> entry : remoteConfigMap.entrySet()){
+            prop.put(entry.getKey(),entry.getValue());
+        }
+        return prop;
     }
 
     @Override

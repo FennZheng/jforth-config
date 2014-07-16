@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -113,6 +114,15 @@ public class LocalConfig implements IDynamicConfig{
     @Override
     public String get(String key) {
         return localConfigMap.get(key);
+    }
+
+    @Override
+    public Properties loadAll() {
+        Properties prop = new Properties();
+        for (Map.Entry<String, String> entry : localConfigMap.entrySet()){
+            prop.put(entry.getKey(),entry.getValue());
+        }
+        return prop;
     }
 
     @PreDestroy

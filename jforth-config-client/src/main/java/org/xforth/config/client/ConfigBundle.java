@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Properties;
+
 /**
  * 管理LocalConfig和RemoteConfig
  */
@@ -44,5 +46,14 @@ public class ConfigBundle implements IConfigProxy {
             logger.debug("ConfigBundle can not find key:{}",key);
         }
         return null;
+    }
+    @Override
+    public Properties loadAll(){
+        Properties localProp = localConfig.loadAll();
+        Properties remoteProp = remoteConfig.loadAll();
+        Properties merged = new Properties();
+        merged.putAll(remoteProp);
+        merged.putAll(localProp);
+        return merged;
     }
 }

@@ -3,22 +3,35 @@ package org.xforth.config.context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+import org.springframework.util.ObjectUtils;
 import org.xforth.config.client.ConfigBundle;
+
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DistributedPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
     private static final Logger logger = LoggerFactory.getLogger(DistributedPropertyPlaceholderConfigurer.class);
+    private static volatile AtomicBoolean inited = new AtomicBoolean(false);
     private ConfigBundle configBundle;
     /**
-     * 重写父类方法，解密指定属性名对应的属性值
+     * 重写父类方法，增加远程config
      */
     @Override
-    protected String convertProperty(String propertyName,String propertyValue){
-        String propVal = configBundle.get(propertyName);
-        if(propVal!=null){
-            logger.info("load from configBundle key:{}, value:{}",propertyName,propVal);
-            return propVal;
+    protected void convertProperties(Properties props) {
+        if(inited.compareAndSet(false,true)){
+            //加载jforth config
+            props.putAll(configBundle.loadAll());
         }
-        return propertyValue;
+        Enumeration<?> propertyNames = props.propertyNames();
+        while (propertyNames.hasMoreElements()) {
+            String propertyName = (String) propertyNames.nextElement();
+            String propertyValue = props.getProperty(propertyName);
+            String convertedValue = convertProperty(propertyName, propertyValue);
+            if (!ObjectUtils.nullSafeEquals(propertyValue, convertedValue)) {
+                props.setProperty(propertyName, convertedValue);
+            }
+        }
     }
 
     public ConfigBundle getConfigBundle() {
