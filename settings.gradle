@@ -2,3 +2,4 @@ rootProject.name = "jforth-config"
 
 include "jforth-config-client"
 include "jforth-config-manager"
+include "jforth-config-demo"
