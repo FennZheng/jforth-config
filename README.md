@@ -16,6 +16,7 @@ add functions:
 (1)watch local config file change, it changes cause local configBundle change in directly.
 (2)watch remote config item change, it changes cause remote configBundle change in directly.
 
-Version-0.2.0:(planing)
+Version-0.3.0:(planing)
 (1)improve ease of dynamic configuration and reduce dependence of ConfigBundle
 (2)add automatically packaged build by gradle
+(3)jforth-config-manager:provide remote config center import/export by *.properties
