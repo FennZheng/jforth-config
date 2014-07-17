@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -25,19 +27,29 @@ public class RemoteConfig implements IDynamicConfig {
     private String zkConnectString;
 
     private String appName;
-    public RemoteConfig(String appName,String zkConnectString){
+    public RemoteConfig(String appName,String zkConnectString,boolean isDynamic){
         this.appName = appName;
         this.zkConnectString = zkConnectString;
         generateServicePath();
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
         zkClient = CuratorFrameworkFactory.newClient(zkConnectString, retryPolicy);
         zkClient.start();
-        //registerWatcher();
+        if(isDynamic)
+            registerWatcher();
         loadConfig(null);
     }
     @Override
     public String get(String key) {
         return remoteConfigMap.get(key);
+    }
+
+    @Override
+    public Properties loadAll() {
+        Properties prop = new Properties();
+        for (Map.Entry<String, String> entry : remoteConfigMap.entrySet()){
+            prop.put(entry.getKey(),entry.getValue());
+        }
+        return prop;
     }
 
     @Override
@@ -82,16 +94,16 @@ public class RemoteConfig implements IDynamicConfig {
             public void childEvent(CuratorFramework client, PathChildrenCacheEvent event) throws Exception {
                 String path = event.getData().getPath();
                 String key = path.replaceAll(servicePath + "/", "").trim();
-                String val = event.getData().toString().trim();
+                byte[] dataBytes = event.getData().getData();
                 switch (event.getType()) {
                     case CHILD_ADDED:
-                        remoteConfigMap.put(key,val);
+                        remoteConfigMap.put(key,new String(dataBytes,DEFAULT_ENCODE));
                         break;
                     case CHILD_REMOVED:
                         remoteConfigMap.remove(key);
                         break;
                     case CHILD_UPDATED:
-                        remoteConfigMap.put(key,val);
+                        remoteConfigMap.put(key,new String(dataBytes,DEFAULT_ENCODE));
                         break;
                 }
             }

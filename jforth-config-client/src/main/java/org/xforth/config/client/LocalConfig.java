@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -32,11 +33,12 @@ public class LocalConfig implements IDynamicConfig{
     }
     private String configFile;
 
-    public LocalConfig(String configFile){
+    public LocalConfig(String configFile,boolean isDynamic){
         this.configFile = configFile;
         try {
             loadConfig(configFile);
-            //registerWatcher();
+            if(isDynamic)
+                registerWatcher();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -78,8 +80,13 @@ public class LocalConfig implements IDynamicConfig{
                                 logger.error("checkConfigLoop loadConfig error:{}",e);
                             }
                         }else{
-                            logger.debug("ignore event:it was not a config file changing");
+                            logger.debug("ignore event:it was not a config file changing as name:{}",name);
                         }
+                    }
+                    boolean valid = key.reset();
+                    if (!valid)
+                    {
+                        break;	// Exit if directory is deleted
                     }
                 }
             }
@@ -102,7 +109,7 @@ public class LocalConfig implements IDynamicConfig{
                     newConfigMap.put(propertyName, properties.getProperty(propertyName));
                 }
                 if(newConfigMap.size()>0)
-                localConfigMap = newConfigMap;
+                    localConfigMap = newConfigMap;
             }
         } catch (URISyntaxException|IOException e) {
             logger.error("loadLocalConfig error:{}",e);
@@ -113,6 +120,15 @@ public class LocalConfig implements IDynamicConfig{
     @Override
     public String get(String key) {
         return localConfigMap.get(key);
+    }
+
+    @Override
+    public Properties loadAll() {
+        Properties prop = new Properties();
+        for (Map.Entry<String, String> entry : localConfigMap.entrySet()){
+            prop.put(entry.getKey(),entry.getValue());
+        }
+        return prop;
     }
 
     @PreDestroy

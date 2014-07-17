@@ -120,10 +120,12 @@ public class TestClient extends AbstractJUnit4SpringContextTests {
             logger.error("modifyDataInZookeeper error:{}",e);
         }
     }
+    @Test
     public void modifyDataInZookeeper() {
         try {
             String serviceCode = "/config-center/app1";
-            zkClient.setData().forPath(serviceCode+"/local.config.remote.key3","local.config.remote.value3.dynamicChange1".getBytes("utf-8"));
+            zkClient.setData().forPath(serviceCode+"/local.config.remote.key3",
+                    "local.config.remote.value3.dynamicChange4".getBytes("utf-8"));
         }catch (Exception e ){
             logger.error("modifyDataInZookeeper error:{}",e);
         }
