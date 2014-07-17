@@ -27,14 +27,15 @@ public class RemoteConfig implements IDynamicConfig {
     private String zkConnectString;
 
     private String appName;
-    public RemoteConfig(String appName,String zkConnectString){
+    public RemoteConfig(String appName,String zkConnectString,boolean isDynamic){
         this.appName = appName;
         this.zkConnectString = zkConnectString;
         generateServicePath();
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
         zkClient = CuratorFrameworkFactory.newClient(zkConnectString, retryPolicy);
         zkClient.start();
-        registerWatcher();
+        if(isDynamic)
+            registerWatcher();
         loadConfig(null);
     }
     @Override

@@ -10,9 +10,10 @@
         <property name="configBundle" ref="configBundle"/>
     </bean>
     <bean id="configBundle" class="org.xforth.config.client.ConfigBundle">
-        <constructor-arg index="0" value="config.properties"/>
-        <constructor-arg index="1" value="app1"/>
+        <constructor-arg index="0" value="app1"/>
+        <constructor-arg index="1" value="config.properties"/>
         <constructor-arg index="2" value="172.16.3.27:2181"/>
+        <constructor-arg index="3" value="true"/>
     </bean>
     <context:component-scan base-package="org.xforth.config.demo" />
 </beans>

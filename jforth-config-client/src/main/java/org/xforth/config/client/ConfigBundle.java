@@ -16,9 +16,9 @@ public class ConfigBundle implements IConfigProxy {
     private static LocalConfig localConfig;
     private static RemoteConfig remoteConfig;
 
-    public ConfigBundle(String configFile,String schema,String zkConnectString){
-        localConfig = new LocalConfig(configFile);
-        remoteConfig = new RemoteConfig(schema,zkConnectString);
+    public ConfigBundle(String schema,String configFile,String zkConnectString,boolean isDynamic){
+        localConfig = new LocalConfig(configFile,isDynamic);
+        remoteConfig = new RemoteConfig(schema,zkConnectString,isDynamic);
     }
     /**
      * 提供配置读取

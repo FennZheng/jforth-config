@@ -33,11 +33,12 @@ public class LocalConfig implements IDynamicConfig{
     }
     private String configFile;
 
-    public LocalConfig(String configFile){
+    public LocalConfig(String configFile,boolean isDynamic){
         this.configFile = configFile;
         try {
             loadConfig(configFile);
-            registerWatcher();
+            if(isDynamic)
+                registerWatcher();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
