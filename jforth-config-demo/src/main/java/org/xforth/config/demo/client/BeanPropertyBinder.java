@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
+import org.xforth.config.aop.DynamicValue;
 
 @Component
 public class BeanPropertyBinder {
@@ -23,6 +24,9 @@ public class BeanPropertyBinder {
         System.out.println(binder.getOverridePro1());
         System.out.println(binder.getRemotePro1());
         System.out.println(binder.getRemotePro2());
+        while(true){
+            System.out.println(binder.getLocalPro1());
+        }
     }
 
     public String getStaticProperty() {
@@ -32,16 +36,15 @@ public class BeanPropertyBinder {
     public void setStaticProperty(String staticProperty) {
         this.staticProperty = staticProperty;
     }
-
+    @DynamicValue
     public String getLocalPro1() {
-
         return localPro1;
     }
-    @Value("${local.config.local.key1:}")
+    @Value("${local.config.local.key2:}")
     public void setLocalPro1(String localPro1) {
         this.localPro1 = localPro1;
     }
-
+    @DynamicValue
     public String getLocalPro2() {
         return localPro2;
     }

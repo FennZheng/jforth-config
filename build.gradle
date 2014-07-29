@@ -49,6 +49,7 @@ allprojects {
         compile 'com.alibaba:fastjson:1.1.41'
         compile "org.apache.curator:curator-recipes:2.4.2"
         compile 'javax.transaction:jta:1.1'
+        compile 'org.aspectj:aspectjrt:1.8.1'
 
         /* test */
         testCompile 'junit:junit:4.11'

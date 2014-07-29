@@ -56,4 +56,26 @@ public class ConfigBundle implements IConfigProxy {
         merged.putAll(localProp);
         return merged;
     }
+    //test
+    public static String val(String key){
+        if(StringUtils.isNotBlank(key)){
+            String localVal = localConfig.get(key);
+            if(StringUtils.isNotBlank(localVal)){
+                if(logger.isDebugEnabled()){
+                    //logger.debug("ConfigBundle get config from local key:{} value:{}",key,localVal);
+                }
+                return localVal;
+            }else{
+                String remoteVal = remoteConfig.get(key);
+                if(logger.isDebugEnabled()){
+                    //logger.debug("ConfigBundle get config from remote key:{} value:{}",key,remoteVal);
+                }
+                return remoteVal;
+            }
+        }
+        if(logger.isDebugEnabled()){
+            logger.debug("ConfigBundle can not find key:{}",key);
+        }
+        return null;
+    }
 }
