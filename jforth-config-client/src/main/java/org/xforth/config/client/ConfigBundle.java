@@ -10,8 +10,7 @@ import java.util.Properties;
 /**
  * 管理LocalConfig和RemoteConfig
  */
-@Component
-public class ConfigBundle implements IConfigProxy {
+public class ConfigBundle implements IConfigProxy,IPropertiesExport {
     private static final Logger logger = LoggerFactory.getLogger(ConfigBundle.class);
     private static LocalConfig localConfig;
     private static RemoteConfig remoteConfig;

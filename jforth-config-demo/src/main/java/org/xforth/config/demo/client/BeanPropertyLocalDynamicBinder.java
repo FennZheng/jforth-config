@@ -18,7 +18,7 @@ public class BeanPropertyLocalDynamicBinder {
         String oldVal = binder.configBundle.get("local.config.local.key1");
         while(true){
             String newVal = binder.configBundle.get("local.config.local.key1");
-            //watch log to find out 'start watch.. dir' then modify config.properties
+            //watch log to find out 'start watch.. dir' then modify config-demo.properties
             if(!newVal.equals(oldVal)){
                 oldVal = newVal;
                 System.out.println("dynamic local value change:"+oldVal);

@@ -8,4 +8,10 @@
 	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd ">
     <aop:aspectj-autoproxy />
     <bean id="dynamicPropertyAspect" class="org.xforth.config.aop.DynamicPropertyAspect"/>
+    <bean id="configBundle" class="org.xforth.config.client.ConfigBundle">
+        <constructor-arg name="schema" value="${config.project}"/>
+        <constructor-arg name="configFile" value="${config.file}"/>
+        <constructor-arg name="zkConnectString" value="${config.zookeeper}"/>
+        <constructor-arg name="isDynamic" value="${config.support.dynamic}"/>
+    </bean>
 </beans>

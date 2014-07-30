@@ -9,7 +9,11 @@
         http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
     <import resource="configBundle.xml"/>
     <bean class="org.xforth.config.context.DistributedPropertyPlaceholderConfigurer">
-        <property name="configBundle" ref="configBundle"/>
+        <property name="locations">
+            <list>
+                <value>classpath:config-demo.properties</value>
+            </list>
+        </property>
     </bean>
     <bean id="configBundle" class="org.xforth.config.client.ConfigBundle">
         <constructor-arg index="0" value="app1"/>

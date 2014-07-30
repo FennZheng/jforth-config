@@ -44,7 +44,7 @@ public class TestClient extends AbstractJUnit4SpringContextTests {
                 String oldVal = configBundle.get("local.config.local.key1");
                 while (true) {
                     long start = System.nanoTime();
-                    //modify config.properties value during this time
+                    //modify config-test.properties value during this time
                     System.out.println("get cost:" + (System.nanoTime() - start) + configBundle.get("local.config.local.key1"));
                     if (!oldVal.equals(configBundle.get("local.config.local.key1"))) {
                         //assertEquals("local.config.local.value1.dynamic",configBundle.get("local.config.local.key1"));
