@@ -3,6 +3,7 @@ package org.xforth.config.aop;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,19 +15,15 @@ public class DynamicPropertyAspect {
     private static final Logger logger = LoggerFactory.getLogger(DynamicPropertyAspect.class);
     @Autowired
     private ConfigBundle configBundle;
-    @Around("execution(* *.get()) && within(@org.xforth.config.aop.DynamicValue *)") //定义环绕通知
+
+    @Around("execution(public * get*()) && @annotation(org.xforth.config.aop.DynamicValue)")
     public Object dynamicValueSet(ProceedingJoinPoint pjp) throws Throwable {
-        long start = System.nanoTime();
         final MethodSignature signature = (MethodSignature) pjp.getSignature();
-        Value valueAno = signature.getMethod().getAnnotation(Value.class);
+        DynamicValue valueAno = signature.getMethod().getAnnotation(DynamicValue.class);
         if(valueAno!=null){
             String propKey = valueAno.value();
             try {
-                String propertyVal = configBundle.get(propKey);
-                if(logger.isDebugEnabled()){
-                    logger.debug("dynamicValueSet elapse time :"+(System.nanoTime()-start));
-                }
-                return propertyVal;
+                return configBundle.get(propKey);
             }catch (Throwable e){
                 logger.error("Method name:{} dynamicValueSet error:{}",signature.getMethod().getName(),e);
             }

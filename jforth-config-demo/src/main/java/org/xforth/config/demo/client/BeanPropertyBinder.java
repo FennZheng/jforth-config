@@ -18,13 +18,14 @@ public class BeanPropertyBinder {
     public static void main(String args[]){
         ApplicationContext context = new ClassPathXmlApplicationContext("classpath:configBundle-demo.xml");
         BeanPropertyBinder binder = (BeanPropertyBinder)context.getBean("beanPropertyBinder");
-        System.out.println(binder.getStaticProperty());
+        /*System.out.println(binder.getStaticProperty());
         System.out.println(binder.getLocalPro1());
         System.out.println(binder.getLocalPro2());
         System.out.println(binder.getOverridePro1());
         System.out.println(binder.getRemotePro1());
-        System.out.println(binder.getRemotePro2());
-        while(true){
+        System.out.println(binder.getRemotePro2());*/
+        int i=30;
+        while(--i>0){
             System.out.println(binder.getLocalPro1());
         }
     }
@@ -32,19 +33,17 @@ public class BeanPropertyBinder {
     public String getStaticProperty() {
         return staticProperty;
     }
-    @Value("${staticProperty:}")
     public void setStaticProperty(String staticProperty) {
         this.staticProperty = staticProperty;
     }
-    @DynamicValue
+    @DynamicValue("local.config.local.key1")
     public String getLocalPro1() {
         return localPro1;
     }
-    @Value("${local.config.local.key2:}")
     public void setLocalPro1(String localPro1) {
         this.localPro1 = localPro1;
     }
-    @DynamicValue
+    @DynamicValue("local.config.local.key2")
     public String getLocalPro2() {
         return localPro2;
     }

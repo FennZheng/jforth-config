@@ -12,7 +12,7 @@ import org.xforth.config.client.ConfigBundle;
 import java.util.concurrent.CountDownLatch;
 
 
-@ContextConfiguration(locations = { "classpath*:configBundle.xml" })
+@ContextConfiguration(locations = { "classpath*:configBundle-test.xml" })
 public class TestClient extends AbstractJUnit4SpringContextTests {
     @Autowired
     private ConfigBundle configBundle;
