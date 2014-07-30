@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
  * 单例
  * 本地配置管理，同时监控配置配置文件变化，动态变更ConfigBundle
  */
-public class LocalConfig implements IDynamicConfig{
+public class LocalConfig implements IDynamicConfig,IPropertiesExport{
     private static final Logger logger = LoggerFactory.getLogger(LocalConfig.class);
     private static WatchService watcher = null;
     private static final ExecutorService executorService = Executors.newFixedThreadPool(1);

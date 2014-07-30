@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 单例 增量更新
  */
-public class RemoteConfig implements IDynamicConfig {
+public class RemoteConfig implements IDynamicConfig,IPropertiesExport {
     private static final Logger logger = LoggerFactory.getLogger(RemoteConfig.class);
     private static ConcurrentHashMap<String,String> remoteConfigMap = new ConcurrentHashMap<String, String>();
     private static CuratorFramework zkClient;
