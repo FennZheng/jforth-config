@@ -10,14 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
+import java.io.*;
+import java.util.*;
+
 @Component
 public class RemoteConfigManager implements IRemoteConfigManager{
     private static final Logger logger = LoggerFactory.getLogger(RemoteConfigManager.class);
@@ -34,17 +29,17 @@ public class RemoteConfigManager implements IRemoteConfigManager{
     /**
      * init by properties file
      * @param schema
-     * @param fileName
+     * @param file
      * @throws Exception :if schema exists,throw RuntimeException
      */
     @Override
-    public void initByProperties(String schema,String fileName) throws Exception {
+    public void initByProperties(String schema,File file) throws Exception {
         String servicePath = generateServicePath(schema);
         checkServiceConfigExists(servicePath);
         Properties prop = new Properties();
         InputStream input = null;
         try {
-            input = new FileInputStream(fileName);
+            input = new FileInputStream(file);
             prop.load(input);
         } catch (IOException e) {
             logger.error("importProperties load properties exception:{}",e);
@@ -95,7 +90,7 @@ public class RemoteConfigManager implements IRemoteConfigManager{
     }
 
     @Override
-    public void exportProperties(String schema) throws Exception {
+    public Map<String,String> exportProperties(String schema) throws Exception {
         final String servicePath = generateServicePath(schema);
         HashMap<String,String> propertyMap = new HashMap<String, String>();
         if(zkClient.checkExists().forPath(servicePath)==null) {
@@ -108,6 +103,7 @@ public class RemoteConfigManager implements IRemoteConfigManager{
                 }
             }
         }
+        return propertyMap;
     }
 
     public String getZkConnectString() {
