@@ -1,24 +1,39 @@
-repositories {
-    mavenCentral();
+apply plugin: 'maven'
+
+buildDir = "../public/${moduleName}"
+
+ext {
+    distRevision = System.env.SVN_REVISION ? "${System.env.SVN_REVISION}" : "unformal"
+    distBuildNumber = System.env.BUILD_NUMBER ? "${System.env.BUILD_NUMBER}" : "unknown"
+    distBuildId = System.env.BUILD_ID ? "${System.env.BUILD_ID}" : System.currentTimeMillis()
+    distPureFileName = "$moduleName-$version-$distBuildNumber-$distBuildId-scm-$distRevision"
 }
+
 configurations {
     all*.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     all*.exclude group: 'log4j', module: 'log4j'
     all*.exclude group: 'commons-logging', module: 'commons-logging'
     all {resolutionStrategy.cacheChangingModulesFor 30, 'minutes'}
 }
-allprojects {
-    apply plugin: 'idea'
-    apply plugin: 'java'
-    apply plugin: 'maven'
-    apply plugin: 'signing' //使用signing plugin做数字签名
 
-//定义GroupID和Version，ArtefactID会自动使用Project名
-    group = 'org.xforth'
-    version = '0.2.0-SNAPSHOT'
-    sourceCompatibility = 1.7
-    targetCompatibility = 1.7
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    configurations {
+        optional
+        compile.extendsFrom optional
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
     dependencies {
+        components {
+            eachComponent { details ->
+                details.statusScheme = ["snapshot", "integration", "milestone", "release"]
+            }
+        }
+
         /* spring */
         compile "org.springframework:spring-context-support:3.2.9.RELEASE"
 
@@ -31,6 +46,7 @@ allprojects {
         compile("org.logback-extensions:logback-ext-spring:0.1.2") { transitive = false }
 
         /* others */
+        compile 'com.alibaba:fastjson:1.1.41'
         compile "org.apache.curator:curator-recipes:2.4.2"
         compile 'javax.transaction:jta:1.1'
         compile 'org.aspectj:aspectjrt:1.8.1'
@@ -40,6 +56,13 @@ allprojects {
         testCompile 'junit:junit:4.11'
         testCompile "org.springframework:spring-test:3.2.9.RELEASE"
     }
+    sourceSets {
+        main {
+            resources {
+                srcDirs 'src/main/resources', 'src/main/resource', 'scripts/logback'
+            }
+        }
+    }
     idea {
         module {
             excludeDirs = []
@@ -48,70 +71,80 @@ allprojects {
             }
         }
     }
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-                //为Pom文件做数字签名
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-                //指定项目部署到的中央库地址，UserName和Password就是Part 1中注册的账号。
-                repository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                    authentication(userName: "XXX", password: "YYY")
-                }
-                //构造项目的Pom文件，参见Part 2中Pom文件的规范，不要遗漏必填项
-                pom.project {
-                    name project.name
-                    packaging 'jar'
-                    description 'Toggle is a little java tool to make your life easier when you try to use Feature Toggle in Java.'
-                    url 'https://github.com/xforth/jforth-config'
-
-                    scm {
-                        url 'scm:git@github.com:xforth/jforth-config.git'
-                        connection 'scm:git@github.com:xforth/jforth-config.git'
-                        developerConnection 'git@github.com:xforth/jforth-config.git'
-                    }
-
-                    licenses {
-                        license {
-                            name 'The MIT License (MIT)'
-                            url 'http://mit-license.org/'
-                            distribution 'repo'
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id 'vernonzheng'
-                            name 'Vernon Zheng'
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-//参见Part 2， 为项目生成**.jar/**-javadoc.jar/**-sources.jar
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        classifier = 'javadoc'
-        from 'build/docs/javadoc'
-    }
-
-    task sourcesJar(type: Jar) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-
-    artifacts {
-        archives jar
-        archives javadocJar
-        archives sourcesJar
-    }
-
-//为所有的jar包做数字签名
-    signing {
-        sign configurations.archives
-    }
 }
 
 
+
+
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+    options.debug = "on"
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+}
+
+tasks.withType(Javadoc) {
+    options.encoding = "UTF-8"
+    options.charSet = "UTF-8"
+}
+
+task cleanAll << {
+    println "Clean project.."
+    delete buildDir
+}
+
+task init << {
+    println '+---------------------------------------------------+'
+    println '|                                                   |'
+    println "| B U I L D I N G $moduleName $version"
+    println '|                                                   |'
+    println '+---------------------------------------------------+'
+}
+
+compileJava.dependsOn([init, cleanAll])
+
+jar {
+    manifest {
+        //from 'scripts/manifest/MANIFEST.MF'
+        attributes("Specification-Title": moduleName, "Specification-Version": version)
+        attributes("Implementation-Title": moduleName, "Implementation-Version": "$version-$distBuildNumber-$distBuildId-$distRevision")
+        attributes("Specification-Vendor": "vernon.zheng", "Implementation-Vendor": "vernon.zheng")
+    }
+    exclude '*.properties'
+    exclude 'logback*.xml'
+
+    includeEmptyDirs = false
+    archiveName = "${moduleName}.jar"
+}
+
+task makeDist(dependsOn: [jar], type: Zip) {
+    into('bin') {
+        from jar
+        from(sourceSets.main.resources) {
+            include '*.properties'
+            include 'logback.xml'
+        }
+    }
+    into('bin') {
+        from "scripts/sh"
+        fileMode 0755
+    }
+    into('bin/bsh') {
+        from "scripts/bsh"
+    }
+    into('units') {
+        from "units"
+    }
+    into('lib') {
+        from configurations.runtime
+    }
+    from "$buildDir/${distPureFileName}.txt"
+    archiveName = "${distPureFileName}.zip"
+    destinationDir = rootDir
+}
+
+makeDist.doFirst {
+    new File("$buildDir/${distPureFileName}.txt").text = 'distribution version'
+    new File('.').eachFileMatch(~"$moduleName-.*\\.zip") { it.delete() }
+}
