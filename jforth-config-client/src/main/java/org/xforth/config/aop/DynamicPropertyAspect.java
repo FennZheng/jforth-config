@@ -3,17 +3,13 @@ package org.xforth.config.aop;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.xforth.config.client.ConfigBundle;
 @Aspect
 public class DynamicPropertyAspect {
     private static final Logger logger = LoggerFactory.getLogger(DynamicPropertyAspect.class);
-    @Autowired
     private ConfigBundle configBundle;
 
     @Around("execution(public * get*()) && @annotation(org.xforth.config.aop.DynamicValue)")
@@ -30,5 +26,13 @@ public class DynamicPropertyAspect {
         }
         Object result = pjp.proceed();
         return result;
+    }
+
+    public ConfigBundle getConfigBundle() {
+        return configBundle;
+    }
+
+    public void setConfigBundle(ConfigBundle configBundle) {
+        this.configBundle = configBundle;
     }
 }

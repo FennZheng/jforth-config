@@ -4,36 +4,53 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
-import org.springframework.util.ObjectUtils;
+import org.springframework.util.CollectionUtils;
 import org.xforth.config.client.ConfigBundle;
-
-import java.util.Enumeration;
+import java.io.IOException;
 import java.util.Properties;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DistributedPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
     private static final Logger logger = LoggerFactory.getLogger(DistributedPropertyPlaceholderConfigurer.class);
-    private static volatile AtomicBoolean inited = new AtomicBoolean(false);
-    @Autowired
     private ConfigBundle configBundle;
     /**
-     * 重写父类方法，代理加载jforth-config
+     * Return a merged Properties instance containing both the
+     * loaded properties and properties set on this FactoryBean.
      */
     @Override
-    protected void convertProperties(Properties props) {
-        //怎样解决configBundle依赖Properties的注入，而properties的注入又依赖ConfigBundle的获取
-        if(inited.compareAndSet(false,true)){
-            //加载jforth config
-            props.putAll(configBundle.loadAll());
+    protected Properties mergeProperties() throws IOException {
+        Properties result = new Properties();
+
+        if (this.localOverride) {
+            // Load properties from file upfront, to let local properties override.
+            loadProperties(result);
         }
-        Enumeration<?> propertyNames = props.propertyNames();
-        while (propertyNames.hasMoreElements()) {
-            String propertyName = (String) propertyNames.nextElement();
-            String propertyValue = props.getProperty(propertyName);
-            String convertedValue = convertProperty(propertyName, propertyValue);
-            if (!ObjectUtils.nullSafeEquals(propertyValue, convertedValue)) {
-                props.setProperty(propertyName, convertedValue);
+
+        if (this.localProperties != null) {
+            for (Properties localProp : this.localProperties) {
+                CollectionUtils.mergePropertiesIntoMap(localProp, result);
             }
         }
+
+        if (!this.localOverride) {
+            // Load properties from file afterwards, to let those properties override.
+            loadProperties(result);
+        }
+        loadCentralProperties(result);
+        return result;
+    }
+
+    /**
+     * load central proxy
+     */
+    protected void loadCentralProperties(Properties properties){
+        properties.putAll(configBundle.loadAll());
+    }
+
+    public ConfigBundle getConfigBundle() {
+        return configBundle;
+    }
+
+    public void setConfigBundle(ConfigBundle configBundle) {
+        this.configBundle = configBundle;
     }
 }
