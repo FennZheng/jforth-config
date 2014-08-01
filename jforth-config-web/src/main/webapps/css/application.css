@@ -1,0 +1,234 @@
+body, p, td, th, li
+{
+	font: normal 12px auto "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	color: #4f6b72;
+	background:url(../images/bg.png) #fff;
+	line-height:1.5em;
+}
+
+table#datagrid{
+	width: 100%;
+	margin: 1px;
+}
+table#datagrid tr.odd{
+	background: #fff;
+}
+table#datagrid tr.even{
+	background: #eee;
+}
+
+div.datagrid_div{
+	padding:4px;
+}
+
+table.datagrid1{
+	border-collapse: collapse;
+	border-bottom: 1px solid #666;
+}
+table.datagrid1 th{
+	color: #333;
+	padding: 1px;
+	font-family: monospace;
+	background: #9cf;
+	text-align: left;
+	border-top: 1px solid #666;
+	border-bottom: 1px solid #666;
+}
+
+table.datagrid1 th a:link, table.datagrid1 th a:visited
+{
+	color: #333333;
+	text-decoration: underline;
+}
+
+table.datagrid1 th a:hover, table.datagrid1 th a:active
+{
+	color:#000000;
+	text-decoration: none;
+}
+
+table.datagrid1 td{
+	padding: 2px;
+	border-top: 1px solid #ccc;
+}
+
+table.datagrid2{
+	border-collapse: collapse;
+}
+table.datagrid2 th{
+	text-align: left;
+	background: #9cf;
+	padding: 3px;
+	border: 1px #333 solid;
+}
+table.datagrid2 td{
+	padding: 3px;
+	border: none;
+	border:1px #333 solid;
+}
+
+table.datagrid3{
+	border-collapse: separate;
+}
+table.datagrid3 th{
+	text-align: left;
+	background: #ddd;
+	padding: 3px;
+	border: 0px solid #fff;
+}
+table.datagrid3 td{
+	padding: 3px;
+	border: 0px solid #fff;
+}
+
+table.datagrid4{
+	border-collapse: collapse;
+}
+table.datagrid4 th{
+	text-align: left;
+	background: #ddd;
+	padding: 3px;
+	border: none;
+}
+table.datagrid4 td{
+	padding: 3px;
+	border: none;
+	border-top: 1px solid #fff;
+}
+
+table#datagrid tr:hover,
+table#datagrid tr.hover{
+	background: #9cf;
+}
+
+div.formtable_div{
+	padding:2px 4px 4px 4px;
+}
+
+table.formtable {
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	border-collapse:collapse;
+	border:1px;
+}
+
+.formtable td {
+	border-right: 1px solid #C1DAD7;
+	border-bottom: 1px solid #C1DAD7;
+	border-left: 1px solid #C1DAD7;
+	font-size:12px;
+	padding: 3px 0px 3px 0px;
+	color: #4f6b72;
+}
+
+table.formtable td.nobg {
+	border-top: 0;
+	border-left: 0;
+	border-right: 1px solid #C1DAD7;
+	background: none;
+	color: #005D9B;
+	font: bold 18px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+}
+
+
+table.formtable td.header {
+	background: #F5FAFA;
+	color: #797268;
+	font: bold 15px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+}
+
+table.formtable td.tdname {
+	border-left: 1px solid #C1DAD7;
+	border-top: 0;
+	background:#F5FAFA;
+	padding: 3px 3px 3px 3px;
+	width:130px;
+	font: bold 12px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+}
+
+table.formtable td.tdval {
+	 padding: 3px 3px 3px 3px;
+}
+
+table.formtable th {
+	font: bold 12px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	color: #4f6b72;
+	border-right: 1px solid #C1DAD7;
+	border-bottom: 1px solid #C1DAD7;
+	border-top: 1px solid #C1DAD7;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	text-align: center;
+	padding: 4px 4px 4px 8px;
+	background: #CAE8EA url(images/bg_header.png) no-repeat;
+}
+
+td.listTitle {
+	border:1px;
+	font-size:14px;
+	/*background:#CAE8EA;*/
+	color:#005E9C;
+	height:20px;
+	text-indent:4px;
+	font: bold 14px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+}
+
+table.formtable .fixedLeftTd{
+	width:70px;
+	color: #4f6b72;
+	background: #CAE8EA url(images/bg_header.png) no-repeat;
+	font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	/*font-weight:bold;*/
+}
+
+table.formtable .footer{
+    height:40px;
+}
+
+
+a:link {
+	COLOR: #585858; TEXT-DECORATION: none; TEXT-DECORATION:underline
+}
+a:visited {
+	COLOR: #BA2636; TEXT-DECORATION: none;TEXT-DECORATION:none
+}
+a:hover  { color:#428EFF; }
+
+
+.fLeft 			{float:left;}
+.fRight 		{float:right;}
+.left			{text-align:left;}
+.right			{text-align:right;}
+.textLeft 		{text-align:left;}
+.textRight 		{text-align:right;}
+.textCenter		{text-align:Center;}
+.vTop			{vertical-align:top;}
+.vBottom		{vertical-align:bottom;}
+.vMiddle		{vertical-align:middle;}
+.clearThis 		{clear:both;}
+.cursorHand		{cursor:pointer;}
+.cursorDefault	{cursor:default;}
+.small			{font-size:.625em;}
+.large			{font-size:1em;}
+.soft			{color:#D3D3D3;}
+.hide			{display:none;}
+p.last			{margin-bottom:0px;}
+.w100			{width:100%;}
+.h100			{height:100%;}
+:focus			{outline: 1;}
+blockquote		{margin: 0 0 18px 18px; color:#666666; font-style: italic;}
+strong			{font-weight:bold;}
+em				{font-style:italic;}
+.red			{color:red;}
+.underline		{text-decoration:underline;}
+.ellipsis		{overflow:hidden;text-overflow:ellipsis;-o-text-overflow:ellipsis;white-space:nowrap;word-wrap:break-word;word-break:break-all;}
+.normal_link:LINK,
+.normal_link:VISITED {
+	color: black;
+	text-decoration: underline;
+}
+.normal_link:HOVER {
+	color: blue;
+	text-decoration: none;
+}

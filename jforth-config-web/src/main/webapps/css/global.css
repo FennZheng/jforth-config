@@ -1,0 +1,39 @@
+body{
+	color: #4f6b72;
+	background:url(../images/bg.png) #fff;
+}
+table th,td{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.428571429;
+    padding-left:10px;
+}
+#contentTable th{
+    background-color: #CAE8EA;
+}
+
+.ellipsis{text-overflow:ellipsis;overflow:hidden;width:280px;white-space:nowrap;}
+select{
+	width:125px;
+}
+input{
+	width:125px;
+}
+.cms-header{
+    width:100%;
+    border:0;
+}
+.cms-search-block-table tr{
+    text-align: center;
+}
+.cms-search-block-button{
+}
+a {cursor:pointer;}
+
+a:link {color: blue; text-decoration:none;}
+
+a:active {color: red; }
+
+a:visited {color:purple;text-decoration:none;}
+
+a:hover {color: red; text-decoration:underline;}

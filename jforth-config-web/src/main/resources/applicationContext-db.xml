@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+		"
+       default-lazy-init="true">
+
+    <description>Spring数据库及事务配置</description>
+
+    <!-- 数据源配置,使用bonecp数据库连接池 -->
+    <bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+        <!-- Connection Info -->
+        <property name="driverClass" value="${jdbc.driver}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+
+        <!-- Connection Pooling Info -->
+        <property name="idleConnectionTestPeriodInSeconds" value="60"/>
+        <property name="idleMaxAgeInSeconds" value="120"/>
+        <property name="minConnectionsPerPartition" value="1"/>
+        <property name="maxConnectionsPerPartition" value="50"/>
+        <property name="partitionCount" value="2"/>
+        <property name="statementsCacheSize" value="100"/>
+        <property name="acquireIncrement" value="1"/>
+        <property name="defaultAutoCommit" value="false"/>
+        <property name="connectionTimeoutInMs" value="5000"/>
+        <property name="queryExecuteTimeLimitInMs" value="1000"/>
+        <property name="poolName" value="app-repo"/>
+        <property name="logStatementsEnabled" value="${pool.logStatementsEnabled}" />
+    </bean>
+
+    <!-- Jpa Entity Manager 配置 -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="persistenceUnitName" value="default"/>
+        <property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter"/>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+                <prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>
+                <prop key="hibernate.hbm2ddl.auto">none</prop>
+                <prop key="hibernate.cache.region.factory_class">
+                    org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
+                </prop>
+                <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+
+    <!-- Jpa 事务配置 -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <!--<qualifier value="jpa"/>-->
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <!-- Spring Data Jpa配置,自动给继承了Repository接口的接口创建代理 -->
+    <jpa:repositories base-package="org.xforth.config.webconsole"
+                      factory-class="stc.skymobi.data.jpa.repository.support.JpaRepositoryFactoryBeanExt"/>
+
+    <!-- 使用annotation定义事务 -->
+    <tx:annotation-driven/>
+</beans>

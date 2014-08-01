@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true" scanPeriod="1 seconds">
+    <contextName>mkt-cms.test</contextName>
+    <jmxConfigurator/>
+    <!-- direct log messages to stdout -->
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <Target>System.out</Target>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %5p |-%c:%L - %m %n</pattern>
+        </encoder>
+    </appender>
+    <logger name="com.skymobi" level="info"/>
+
+	<logger name="org.springframework" level="INFO"/>
+	<logger name="org.springframework.data" level="INFO"/>
+    <logger name="com.jolbox.bonecp.PreparedStatementHandle" level="debug"/>
+
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <includeCallerData>true</includeCallerData>
+        <appender-ref ref="stdout"/>
+    </appender>
+	
+    <root level="warn">
+        <appender-ref ref="ASYNC"/>
+    </root>
+</configuration>
