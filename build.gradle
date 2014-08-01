@@ -72,10 +72,45 @@ allprojects {
         }
     }
 }
+project('jforth-config-web') {
+    description = "Jforth config web"
 
+    dependencies {
+        /* spring */
+        compile 'org.springframework:spring-context:3.2.9.RELEASE'
+        compile 'org.springframework:spring-context-support:3.2.9.RELEASE'
+        compile 'org.springframework:spring-webmvc:3.2.9.RELEASE'
+        compile 'org.springframework:spring-tx:3.2.9.RELEASE'
+        compile 'org.springframework:spring-orm:3.2.9.RELEASE'
+        compile 'org.springframework:spring-test:3.2.9.RELEASE'
+        compile 'org.springframework.data:spring-data-jpa:1.4.2.RELEASE'
 
+        /* commons */
+        compile 'com.google.guava:guava:15.0'
+        compile 'org.apache.commons:commons-lang3:3.1'
 
+        /* log */
+        compile 'org.slf4j:jcl-over-slf4j:1.7.5'
+        compile 'ch.qos.logback:logback-classic:1.0.13'
 
+        /* fastjson */
+        compile 'com.alibaba:fastjson:1.1.24'
+
+        /* hibernate */
+        compile 'org.hibernate:hibernate-entitymanager:4.2.7.SP1'
+        compile 'org.hibernate:hibernate-validator:5.0.1.Final'
+        compile 'org.hibernate:hibernate-ehcache:4.2.7.SP1'
+        compile 'net.sf.ehcache:ehcache-core:2.6.5'
+
+        /* db */
+        runtime 'postgresql:postgresql:9.1-901.jdbc3'
+        compile 'com.jolbox:bonecp:0.8.0-rc3'
+
+        /* others */
+        compile 'org.tuckey:urlrewritefilter:4.0.4'
+        compile 'org.freemarker:freemarker:2.3.20'
+    }
+}
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"

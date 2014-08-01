@@ -24,6 +24,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="jforth-config-client" />
     <orderEntry type="library" exported="" name="Gradle: spring-context-support-3.2.9.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-lang3-3.3.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: jcl-over-slf4j-1.7.7" level="project" />
@@ -32,6 +33,8 @@
     <orderEntry type="library" exported="" name="Gradle: fastjson-1.1.41" level="project" />
     <orderEntry type="library" exported="" name="Gradle: curator-recipes-2.4.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: jta-1.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: aspectjrt-1.8.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: aspectjweaver-1.8.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-logging-1.1.3" level="project" />
     <orderEntry type="library" exported="" name="Gradle: spring-core-3.2.9.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: spring-beans-3.2.9.RELEASE" level="project" />
@@ -52,9 +55,6 @@
     <orderEntry type="library" scope="TEST" name="Gradle: junit-4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: spring-test-3.2.9.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: hamcrest-core-1.3" level="project" />
-    <orderEntry type="module" module-name="jforth-config-client" />
-    <orderEntry type="library" exported="" name="Gradle: aspectjrt-1.8.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: aspectjweaver-1.8.1" level="project" />
   </component>
 </module>
 
