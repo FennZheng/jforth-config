@@ -3,10 +3,12 @@ package org.xforth.config.manager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.io.File;
+
 public class ConfigManagerMain {
-    public static void main(String args[]){
+    public static void main(String args[]) throws Exception {
         ApplicationContext context = new ClassPathXmlApplicationContext("classpath*:configBundle-manager.xml");
-        IRemoteConfigManager remoteConfigManager = (IRemoteConfigManager) context.getBean("remoteConfigManager");
-        //call method
+        RemoteConfigManager remoteConfigManager = (RemoteConfigManager) context.getBean("remoteConfigManager");
+
     }
 }

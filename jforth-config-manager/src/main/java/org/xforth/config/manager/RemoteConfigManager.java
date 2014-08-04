@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.*;
 import java.util.*;
 
@@ -21,6 +22,10 @@ public class RemoteConfigManager implements IRemoteConfigManager{
     private CuratorFramework zkClient;
     private String zkConnectString;
     public RemoteConfigManager(){
+
+    }
+    @PostConstruct
+    public void init(){
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
         zkClient = CuratorFrameworkFactory.newClient(zkConnectString, retryPolicy);
         zkClient.start();
@@ -36,6 +41,7 @@ public class RemoteConfigManager implements IRemoteConfigManager{
     public void initByProperties(String schema,File file) throws Exception {
         String servicePath = generateServicePath(schema);
         checkServiceConfigExists(servicePath);
+        initServicePath(servicePath);
         Properties prop = new Properties();
         InputStream input = null;
         try {
@@ -56,6 +62,15 @@ public class RemoteConfigManager implements IRemoteConfigManager{
         try {
             if(zkClient.checkExists().forPath(servicePath)!=null){
                 throw new RuntimeException("this service config have been inited for servicePath:"+servicePath);
+            }
+        } catch (Exception e) {
+            logger.error("checkServiceConfigExists exception:{}",e);
+        }
+    }
+    private void initServicePath(String servicePath){
+        try {
+            if(zkClient.checkExists().forPath(servicePath)==null){
+                zkClient.create().withMode(CreateMode.PERSISTENT).forPath(servicePath);
             }
         } catch (Exception e) {
             logger.error("checkServiceConfigExists exception:{}",e);
