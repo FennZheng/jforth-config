@@ -95,6 +95,8 @@ public class RemoteConfig implements IDynamicConfig,IPropertiesExport {
                 String path = event.getData().getPath();
                 String key = path.replaceAll(servicePath + "/", "").trim();
                 byte[] dataBytes = event.getData().getData();
+                if(event.getType()==null)
+                    return;
                 switch (event.getType()) {
                     case CHILD_ADDED:
                         remoteConfigMap.put(key,new String(dataBytes,DEFAULT_ENCODE));

@@ -13,5 +13,5 @@
     <bean id="dynamicPropertyAspect" class="org.xforth.config.aop.DynamicPropertyAspect">
         <property name="configBundle" ref="configBundle"/>
     </bean>
-    <aop:aspectj-autoproxy />
+    <aop:aspectj-autoproxy proxy-target-class="true" />
 </beans>

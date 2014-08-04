@@ -18,6 +18,9 @@ public class DynamicPropertyAspect {
         DynamicValue valueAno = signature.getMethod().getAnnotation(DynamicValue.class);
         if(valueAno!=null){
             String propKey = valueAno.value();
+            if(logger.isDebugEnabled()){
+                logger.debug("xforth dynamicValueSet propKey key:"+propKey+" value:"+configBundle.get(propKey));
+            }
             try {
                 return configBundle.get(propKey);
             }catch (Throwable e){

@@ -28,10 +28,12 @@ public class ConfigBundleFactory {
             properties.load(fr);//load()方法可通过字符流直接加载文件
             String project = properties.getProperty(CONFIG_PROJECT_KEY);
             String configRemoteHost = properties.getProperty(CONFIG_REMOTE_CENTER_KEY);
-            String configSupportDynamic = properties.getProperty(CONFIG_SUPPORT_DYNAMIC_KEY, "false");
+            String configSupportDynamic = properties.getProperty(CONFIG_SUPPORT_DYNAMIC_KEY);
+            logger.info("xforth config configSupportDynamic load:"+configSupportDynamic);
+            if(StringUtils.isBlank(configSupportDynamic))
+                configSupportDynamic = "false";
             checkValueNotNull(CONFIG_PROJECT_KEY, project);
             checkValueNotNull(CONFIG_REMOTE_CENTER_KEY, configRemoteHost);
-            checkValueNotNull(CONFIG_SUPPORT_DYNAMIC_KEY, configSupportDynamic);
             configBundle = new ConfigBundle(project, CONFIG_FILE_VALUE, configRemoteHost, Boolean.valueOf(configSupportDynamic));
         } catch (IOException|URISyntaxException e) {
             logger.error("initConfigBundle error:{}",e);

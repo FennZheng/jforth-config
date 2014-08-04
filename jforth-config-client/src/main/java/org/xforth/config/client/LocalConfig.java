@@ -46,7 +46,7 @@ public class LocalConfig implements IDynamicConfig,IPropertiesExport{
     @Override
     public void registerWatcher() {
         try {
-            Path dir = Paths.get(this.getClass().getClassLoader().getResource("").toURI());
+            Path dir = Paths.get(this.getClass().getClassLoader().getResource(configFile).toURI()).getParent();
             logger.info("start watch dir:{}",dir);
             WatchKey watchKey = dir.register(watcher, StandardWatchEventKinds.ENTRY_CREATE,StandardWatchEventKinds.ENTRY_MODIFY,
                     StandardWatchEventKinds.ENTRY_DELETE);
@@ -111,7 +111,7 @@ public class LocalConfig implements IDynamicConfig,IPropertiesExport{
                 if(newConfigMap.size()>0)
                     localConfigMap = newConfigMap;
             }
-        } catch (URISyntaxException|IOException e) {
+        } catch (Exception e) {
             logger.error("loadLocalConfig error:{}",e);
         }
 
