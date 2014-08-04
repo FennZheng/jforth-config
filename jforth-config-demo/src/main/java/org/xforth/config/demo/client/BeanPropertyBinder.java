@@ -15,7 +15,7 @@ public class BeanPropertyBinder {
     private String remotePro1;
     private String remotePro2;
 
-    public static void main(String args[]){
+    public static void main(String args[]) throws InterruptedException {
         ApplicationContext context = new ClassPathXmlApplicationContext("classpath:configBundle-demo.xml");
         BeanPropertyBinder binder = (BeanPropertyBinder)context.getBean("beanPropertyBinder");
         /*System.out.println(binder.getStaticProperty());
@@ -26,6 +26,7 @@ public class BeanPropertyBinder {
         System.out.println(binder.getRemotePro2());*/
         int i=30;
         while(--i>0){
+            Thread.sleep(2000);
             System.out.println(binder.getLocalPro1());
         }
     }
