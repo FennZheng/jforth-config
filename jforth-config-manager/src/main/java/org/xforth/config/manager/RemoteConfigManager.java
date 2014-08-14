@@ -69,6 +69,9 @@ public class RemoteConfigManager implements IRemoteConfigManager{
     }
     private void initServicePath(String servicePath){
         try {
+            if(zkClient.checkExists().forPath(DEFAULT_NAMESPACE)==null){
+                zkClient.create().withMode(CreateMode.PERSISTENT).forPath(DEFAULT_NAMESPACE);
+            }
             if(zkClient.checkExists().forPath(servicePath)==null){
                 zkClient.create().withMode(CreateMode.PERSISTENT).forPath(servicePath);
             }
