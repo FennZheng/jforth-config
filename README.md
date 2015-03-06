@@ -13,6 +13,8 @@ jforth-config-manager:A common lib for managing central data.
 
 jforth-config-web:A simple web manager project using springMvc/postgresql.
 
+jforth-config-node:A common node client lib ,see https://github.com/vernonzheng/jforth-config-node
+
 =============
 0.2.0 Released.
 include jforth-config-client ｜ jforth-config-demo ｜jforth-config-manager.
